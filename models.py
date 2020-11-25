@@ -250,7 +250,7 @@ class Show(db.Model):
             'artist_id': self.artist_id,
             'artist_name': self.artist.name,
             'artist_image_link': self.artist.image_link,
-            'start_time': str(self.start_time)
+            'start_time': self.start_time.strftime("%m/%d/%Y, %H:%M")
         }
 
     def venue_detail(self):
@@ -258,6 +258,6 @@ class Show(db.Model):
             'venue_id': self.venue_id,
             'venue_name': self.venue.name,
             'venue_image_link': self.venue.image_link,
-            'start_time': str(self.start_time)
+            'start_time': self.start_time.strftime("%m/%d/%Y, %H:%M")
         }
 
