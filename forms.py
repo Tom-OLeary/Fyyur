@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from enum import Enum
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
 from wtforms.validators import DataRequired, URL
@@ -104,7 +104,7 @@ states = [
 ]
 
 
-class ShowForm(Form):
+class ShowForm(FlaskForm):
     """Holds data for creating a Show"""
 
     artist_id = StringField(
@@ -120,7 +120,7 @@ class ShowForm(Form):
     )
 
 
-class VenueForm(Form):
+class VenueForm(FlaskForm):
     """Holds data for creating and editing a Venue"""
 
     name = StringField(
@@ -160,7 +160,7 @@ class VenueForm(Form):
     )
 
 
-class ArtistForm(Form):
+class ArtistForm(FlaskForm):
     """Holds data for creating and editing an Artist"""
 
     name = StringField(
