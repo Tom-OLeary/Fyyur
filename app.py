@@ -195,7 +195,7 @@ def search_artists():
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
-    # Shows the venue page with the given venue_id
+    # Shows the artist page with the given artist_id
     artist = Artist.query.filter_by(id=artist_id).first_or_404()
 
     past_shows = db.session.query(Venue, Show).join(Show).join(Artist). \
