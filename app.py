@@ -96,23 +96,33 @@ def search_venues():
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
     # Shows the venue page with the given venue_id
-    selection = Venue.query.get(venue_id)
-    data = Venue.detail(selection)
-    past_shows = []
-    upcoming_shows = []
+    venue = Venue.query.filter_by(id=venue_id).first_or_404()
 
-    for show in selection.shows:
-        time = datetime.strptime(str(show.start_time), '%Y-%m-%d %H:%M:%S')
+    past_shows = db.session.query(Artist, Show).join(Show).join(Venue). \
+        filter(
+        Show.venue_id == venue_id,
+        Show.artist_id == Artist.id,
+        Show.start_time < datetime.now()
+    ). \
+        all()
 
-        artist_data = Show.artist_detail(show)
+    upcoming_shows = db.session.query(Artist, Show).join(Show).join(Venue). \
+        filter(
+        Show.venue_id == venue_id,
+        Show.artist_id == Artist.id,
+        Show.start_time > datetime.now()
+    ). \
+        all()
 
-        upcoming_shows.append(artist_data) if time > datetime.now() else past_shows.append(artist_data)
+    data = Venue.detail(venue)
 
     data.update({
-        "past_shows": past_shows,
-        "upcoming_shows": upcoming_shows,
-        "past_shows_count": len(past_shows),
-        "upcoming_shows_count": len(upcoming_shows)
+        'past_shows': [Show.artist_detail(show)
+                       for artist, show in past_shows],
+        'upcoming_shows': [Show.artist_detail(show)
+                           for artist, show in upcoming_shows],
+        'past_shows_count': len(past_shows),
+        'upcoming_shows_count': len(upcoming_shows)
     })
 
     return render_template('pages/show_venue.html', venue=data)
@@ -186,23 +196,33 @@ def search_artists():
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
     # Shows the venue page with the given venue_id
-    selection = Artist.query.get(artist_id)
-    data = Artist.detail(selection)
-    past_shows = []
-    upcoming_shows = []
+    artist = Artist.query.filter_by(id=artist_id).first_or_404()
 
-    for show in selection.shows:
-        time = datetime.strptime(str(show.start_time), '%Y-%m-%d %H:%M:%S')
+    past_shows = db.session.query(Venue, Show).join(Show).join(Artist). \
+        filter(
+        Show.artist_id == artist_id,
+        Show.venue_id == Venue.id,
+        Show.start_time < datetime.now()
+    ). \
+        all()
 
-        venue_data = Show.venue_detail(show)
+    upcoming_shows = db.session.query(Venue, Show).join(Show).join(Artist). \
+        filter(
+        Show.artist_id == artist_id,
+        Show.venue_id == Venue.id,
+        Show.start_time > datetime.now()
+    ). \
+        all()
 
-        upcoming_shows.append(venue_data) if time > datetime.now() else past_shows.append(venue_data)
+    data = Artist.detail(artist)
 
     data.update({
-        "past_shows": past_shows,
-        "upcoming_shows": upcoming_shows,
-        "past_shows_count": len(past_shows),
-        "upcoming_shows_count": len(upcoming_shows)
+        'past_shows': [Show.venue_detail(show)
+                       for venue, show in past_shows],
+        'upcoming_shows': [Show.venue_detail(show)
+                           for venue, show in upcoming_shows],
+        'past_shows_count': len(past_shows),
+        'upcoming_shows_count': len(upcoming_shows)
     })
 
     return render_template('pages/show_artist.html', artist=data)
