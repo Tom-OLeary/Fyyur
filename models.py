@@ -21,14 +21,12 @@ def setup_db(app):
 
 class Venue(db.Model):
     """Holds data for Venues"""
-
     __tablename__ = 'venue'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
     city = Column(String(120))
     state = Column(String(120))
-    address = Column(String(120))
     phone = Column(String(120))
     image_link = Column(String(500))
     facebook_link = Column(String(120))
@@ -36,12 +34,13 @@ class Venue(db.Model):
     website = Column(String(120))
     seeking_talent = Column(Boolean, default=False)
     seeking_description = Column(String(120))
+    address = Column(String(120))
 
     shows = db.relationship('Show', backref='venue', lazy='dynamic')
 
-    def __init__(self, name, city, state, address, phone, image_link,
-                 facebook_link, genres, website, seeking_talent=False,
-                 seeking_description=""):
+    def __init__(self, name, city, state, phone, image_link,
+                 facebook_link, genres, website, seeking_description="",
+                 address=address, seeking_talent=False):
         """__init__ for Venue Class
 
         Values stored represent the attributes of a Venue
@@ -75,14 +74,14 @@ class Venue(db.Model):
         self.name = name
         self.city = city
         self.state = state
-        self.address = address
         self.phone = phone
         self.image_link = image_link
         self.facebook_link = facebook_link
         self.genres = genres
         self.website = website
-        self.seeking_talent = seeking_talent
         self.seeking_description = seeking_description
+        self.address = address
+        self.seeking_talent = seeking_talent
 
     def delete(self):
         """Deletes Venue item from database
@@ -145,8 +144,8 @@ class Artist(db.Model):
 
     shows = db.relationship('Show', backref='artist', lazy=True)
 
-    def __init__(self, name, city, state, phone, genres, image_link, facebook_link, website, seeking_venue=False,
-                 seeking_description=""):
+    def __init__(self, name, city, state, phone, genres, image_link, facebook_link, website,
+                 seeking_description="", seeking_venue=False):
         """__init__ for Artist Class
 
         Values stored represent the attributes of an Artist
@@ -183,8 +182,8 @@ class Artist(db.Model):
         self.image_link = image_link
         self.facebook_link = facebook_link
         self.website = website
-        self.seeking_venue = seeking_venue
         self.seeking_description = seeking_description
+        self.seeking_venue = seeking_venue
 
     def title(self):
         return {
