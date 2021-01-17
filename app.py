@@ -237,16 +237,11 @@ def edit_artist(artist_id):
     artist_data = Artist.query.get(artist_id)
 
     artist_items = Artist.detail(artist_data)
-    form.name.data = artist_items["name"]
-    form.genres.data = artist_items["genres"]
-    form.city.data = artist_items["city"]
-    form.state.data = artist_items["state"]
-    form.phone.data = artist_items["phone"]
-    form.website.data = artist_items["website"]
-    form.facebook_link.data = artist_items["facebook_link"]
-    form.seeking_venue.data = artist_items["seeking_venue"]
-    form.seeking_description.data = artist_items["seeking_description"]
-    form.image_link.data = artist_items["image_link"]
+    keys = ["name", "genres", "city", "state", "phone", "website", "facebook_link",
+            "seeking_venue", "seeking_description", "image_link"]
+
+    for key in keys:
+        getattr(form, key).data = artist_items[key]
 
     return render_template('forms/edit_artist.html', form=form, artist=artist_items)
 
@@ -258,16 +253,13 @@ def edit_artist_submission(artist_id):
         form_items = request.form
         artist_data = Artist.query.get(artist_id)
 
-        artist_data.name = form_items['name']
-        artist_data.genres = form_items.getlist('genres')
-        artist_data.city = form_items['city']
-        artist_data.state = form_items['state']
-        artist_data.phone = form_items['phone']
-        artist_data.website = form_items['website']
-        artist_data.facebook_link = form_items['facebook_link']
+        keys = ["name", "genres", "city", "state", "phone", "website", "facebook_link",
+                "seeking_description", "image_link"]
+
+        for key in keys:
+            setattr(artist_data, key, form_items[key])
+
         seeking_venue = request.form.get('seeking_venue')
-        artist_data.seeking_description = form_items['seeking_description']
-        artist_data.image_link = form_items['image_link']
 
         if seeking_venue == 'y':
             artist_data.seeking_venue = True
@@ -289,17 +281,11 @@ def edit_venue(venue_id):
     venue_data = Venue.query.get(venue_id)
 
     venue_items = Venue.detail(venue_data)
-    form.name.data = venue_items["name"]
-    form.city.data = venue_items["city"]
-    form.state.data = venue_items["state"]
-    form.address.data = venue_items["address"]
-    form.phone.data = venue_items["phone"]
-    form.image_link.data = venue_items["image_link"]
-    form.facebook_link.data = venue_items["facebook_link"]
-    form.genres.data = venue_items["genres"]
-    form.website.data = venue_items["website"]
-    form.seeking_talent.data = venue_items["seeking_talent"]
-    form.seeking_description.data = venue_items["seeking_description"]
+    keys = ["name", "city", "state", "address", "phone", "image_link", "facebook_link",
+            "genres", "website", "seeking_talent", "seeking_description"]
+
+    for key in keys:
+        getattr(form, key).data = venue_items[key]
 
     return render_template('forms/edit_venue.html', form=form, venue=venue_items)
 
@@ -311,17 +297,13 @@ def edit_venue_submission(venue_id):
         form_items = request.form
         venue_data = Venue.query.get(venue_id)
 
-        venue_data.name = form_items['name']
-        venue_data.city = form_items['city']
-        venue_data.state = form_items['state']
-        venue_data.address = form_items['address']
-        venue_data.phone = form_items['phone']
-        venue_data.image_link = form_items['image_link']
-        venue_data.facebook_link = form_items['facebook_link']
-        venue_data.genres = form_items.getlist('genres')
-        venue_data.website = form_items['website']
+        keys = ["name", "city", "state", "address", "phone", "image_link", "facebook_link",
+                "genres", "website", "seeking_description"]
+
+        for key in keys:
+            setattr(venue_data, key, form_items[key])
+
         seeking_talent = request.form.get('seeking_talent')
-        venue_data.seeking_description = form_items['seeking_description']
 
         if seeking_talent == 'y':
             venue_data.seeking_talent = True
