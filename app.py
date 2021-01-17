@@ -406,47 +406,23 @@ def create_new(form):
         returns Venue data if form == VenueForm
     """
 
-    name = form.name.data
-    city = form.city.data
-    state = form.state.data
-    phone = form.phone.data
-    genres = form.genres.data
-    image_link = form.image_link.data
-    facebook_link = form.facebook_link.data
-    website = form.website.data
-    seeking_description = form.seeking_description.data
+    keys = ["name", "city", "state", "phone", "genres", "image_link", "facebook_link", "website",
+            "seeking_description"]
+
+    results = [getattr(form, key).data for key in keys]
 
     if isinstance(form, ArtistForm):
         # Get appropriate form
         seeking_venue = form.seeking_venue.data
+        artist = Artist(*results, seeking_venue)
 
-        artist = Artist(name=name,
-                        city=city,
-                        state=state,
-                        phone=phone,
-                        genres=genres,
-                        image_link=image_link,
-                        facebook_link=facebook_link,
-                        website=website,
-                        seeking_venue=seeking_venue,
-                        seeking_description=seeking_description)
         return artist
     else:
         seeking_talent = form.seeking_talent.data
         address = form.address.data
 
-        venue = Venue(
-            name=name,
-            city=city,
-            state=state,
-            phone=phone,
-            address=address,
-            genres=genres,
-            image_link=image_link,
-            facebook_link=facebook_link,
-            website=website,
-            seeking_talent=seeking_talent,
-            seeking_description=seeking_description)
+        venue = Venue(*results, address, seeking_talent)
+
         return venue
 
 
