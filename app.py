@@ -169,12 +169,7 @@ def artists():
     # Displays artists at /artists
     artist_data = Artist.query.all()
 
-    artist_list = []
-    for art in artist_data:
-        artist_list.append({
-            "id": art.id,
-            "name": art.name
-        })
+    artist_list = [{"id": art.id, "name": art.name} for art in artist_data]
 
     return render_template('pages/artists.html', artists=artist_list)
 
@@ -256,8 +251,7 @@ def edit_artist_submission(artist_id):
         keys = ["name", "genres", "city", "state", "phone", "website", "facebook_link",
                 "seeking_description", "image_link"]
 
-        for key in keys:
-            setattr(artist_data, key, form_items[key])
+        [setattr(artist_data, key, form_items[key]) for key in keys]
 
         seeking_venue = request.form.get('seeking_venue')
 
@@ -300,8 +294,7 @@ def edit_venue_submission(venue_id):
         keys = ["name", "city", "state", "address", "phone", "image_link", "facebook_link",
                 "genres", "website", "seeking_description"]
 
-        for key in keys:
-            setattr(venue_data, key, form_items[key])
+        [setattr(venue_data, key, form_items[key]) for key in keys]
 
         seeking_talent = request.form.get('seeking_talent')
 
@@ -343,11 +336,8 @@ def create_artist_submission():
 def shows():
     # Displays list of shows at /shows
     shows_data = Show.query.all()
-    show_list = []
 
-    for show in shows_data:
-        show_data = Show.detail(show)
-        show_list.append(show_data)
+    show_list = [Show.detail(show) for show in shows_data]
 
     return render_template('pages/shows.html', shows=show_list)
 
